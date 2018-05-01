@@ -40,6 +40,37 @@
                         <input class="" type="range" name="count" id="countInput" value="4" min="1" max="12" oninput="meter = event.target.value; countOutput.value = countInput.value;">
                     </div>
 
+                    <div class="">
+                        <h6 class="">Volumes</h6>
+                        <p>Master</p>
+                        <input class="" type="range" min="0" max="100" value="50" tabindex="0" oninput="masterVolume = event.target.value / 100">
+                        <p>Accent</p>
+                        <input class="" type="range" min="0" max="100" value="100" tabindex="0" oninput="accentVolume = event.target.value / 100">
+                        <p>Quarter Note</p>
+                        <input class="" type="range" min="0" max="100" value="75" tabindex="0" oninput="quarterVolume = event.target.value / 100">
+                        <p>Eighth Note</p>
+                        <input class="" type="range" min="0" max="100" value="0" tabindex="0" oninput="eighthVolume = event.target.value / 100">
+                        <p>Sixteenth Note</p>
+                        <input class="" type="range" min="0" max="100" value="0" tabindex="0" oninput="sixteenthVolume = event.target.value / 100">
+                        <p>Triplet</p>
+                        <input class="" type="range" min="0" max="100" value="0" tabindex="0" oninput="tripletVolume = event.target.value / 100">
+                    </div>
+                    <div class="">
+                        <h6 class="">Frequencies</h6>
+                        <p>Accent</p>
+                        <input class="" type="range" min="100" max="1000" value="880" tabindex="0" onchange="accentFrequency = event.target.value">
+                        <p>Quarter Note</p>
+                        <input class="" type="range" min="100" max="1000" value="440" tabindex="0" onchange="quarterFrequency = event.target.value">
+                        <p>Eighth Note</p>
+                        <input class="" type="range" min="100" max="1000" value="440" tabindex="0" onchange="eighthFrequency = event.target.value">
+                        <p>Sixteenth Note</p>
+                        <input class="" type="range" min="100" max="1000" value="300" tabindex="0" onchange="sixteenthFrequency = event.target.value">
+                        <p>Triplet</p>
+                        <input class="" type="range" min="100" max="1000" value="220" tabindex="0" onchange="tripletFrequency = event.target.value">
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
 </body>
 

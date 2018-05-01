@@ -21,6 +21,13 @@ var notesInQueue = []; // the notes that have been put into the web audio,
 // and may or may not have played yet. {note, time}
 var timerWorker = null; // The Web Worker used to fire timer messages
 
+// Define frequency
+var accentFrequency = 880;
+var quarterFrequency = 440;
+var eighthFrequency = 440;
+var sixteenthFrequency = 300;
+var tripletFrequency = 220;
+
 function maxBeats() {
     var beats = (meter * 12);
     return beats;
@@ -41,32 +48,45 @@ function calcVolume(beatVolume) {
 }
 
 function scheduleNote(beatNumber, time) {
-  if (beatNumber % maxBeats() === 0) {
-    if (accentVolume > 0.25) {
-      osc.frequency.value = 880.0;
-      gainNode.gain.value = calcVolume(accentVolume);
-    } else {
-      osc.frequency.value = 440.0;
-      gainNode.gain.value = calcVolume(quarterVolume);
-    }
-  } else if (beatNumber % 12 === 0) {   // quarter notes = medium pitch
-    osc.frequency.value = 440.0;
-    gainNode.gain.value = calcVolume(quarterVolume);
-  } else if (beatNumber % 6 === 0) {
-    osc.frequency.value = 440.0;
-    gainNode.gain.value = calcVolume(eighthVolume);
-  } else if (beatNumber % 4 === 0) {
-    osc.frequency.value = 300.0;
-    gainNode.gain.value = calcVolume(tripletVolume);
-  } else if (beatNumber % 3 === 0 ) {                    // other 16th notes = low pitch
-    osc.frequency.value = 220.0;
-    gainNode.gain.value = calcVolume(sixteenthVolume);
-  } else {
-    gainNode.gain.value = 0;   // keep the remaining twelvelet notes inaudible
-  }
+    // push the note on the queue, even if we're not playing.
+    notesInQueue.push({
+        note: beatNumber,
+        time: time
+    });
 
-  osc.start(time);
-  osc.stop(time + noteLength);
+    // create oscillator & gainNode & connect them to the context destination
+    var osc = audioContext.createOscillator();
+    var gainNode = audioContext.createGain();
+
+    osc.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    if (beatNumber % maxBeats() === 0) {
+        if (accentVolume > 0.25) {
+            osc.frequency.value = accentFrequency;
+            gainNode.gain.value = calcVolume(accentVolume);
+        } else {
+            osc.frequency.value = quarterFrequency;
+            gainNode.gain.value = calcVolume(quarterVolume);
+        }
+    } else if (beatNumber % 12 === 0) { // quarter notes = medium pitch
+        osc.frequency.value = quarterFrequency;
+        gainNode.gain.value = calcVolume(quarterVolume);
+    } else if (beatNumber % 6 === 0) {
+        osc.frequency.value = eighthFrequency;
+        gainNode.gain.value = calcVolume(eighthVolume);
+    } else if (beatNumber % 4 === 0) {
+        osc.frequency.value = tripletFrequency;
+        gainNode.gain.value = calcVolume(tripletVolume);
+    } else if (beatNumber % 3 === 0) { // other 16th notes = low pitch
+        osc.frequency.value = sixteenthFrequency;
+        gainNode.gain.value = calcVolume(sixteenthVolume);
+    } else {
+        gainNode.gain.value = 0; // keep the remaining twelvelet notes inaudible
+    }
+
+    osc.start(time);
+    osc.stop(time + noteLength);
 }
 
 function scheduler() {
